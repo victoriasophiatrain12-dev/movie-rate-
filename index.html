@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CineMate</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0d0c0f;
+  --ink2:#161519;
+  --ink3:#1f1e24;
+  --ink4:#2a2930;
+  --ink5:#38363f;
+  --line:rgba(255,255,255,0.06);
+  --line2:rgba(255,255,255,0.11);
+  --line3:rgba(255,255,255,0.18);
+  --cream:#f5f0e8;
+  --cream2:#c8c0b0;
+  --cream3:#8a8278;
+  --amber:#e8a020;
+  --amber2:#f5c842;
+  --amber3:rgba(232,160,32,0.15);
+  --rose:#d44f6e;
+  --teal:#2ec4b6;
+  --teal2:rgba(46,196,182,0.1);
+  --r:10px;
+  --r2:16px;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink);
+  color:var(--cream);
+  font-family:'Outfit',sans-serif;
+  font-size:14px;line-height:1.6;
+  min-height:100vh;overflow-x:hidden;
+}
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:9999;opacity:.55;
+}
+.orb{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0}
+.o1{width:700px;height:700px;top:-250px;left:-200px;background:rgba(232,160,32,0.045)}
+.o2{width:600px;height:500px;bottom:-200px;right:-150px;background:rgba(46,196,182,0.03)}
+.o3{width:500px;height:400px;top:35%;left:40%;transform:translateX(-50%);background:rgba(212,79,110,0.025)}
+.wrap{max-width:1160px;margin:0 auto;padding:0 28px;position:relative;z-index:1}
+
+/* HEADER */
+header{padding:38px 0 28px;border-bottom:1px solid var(--line);margin-bottom:52px}
+.hrow{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px}
+.brand{display:flex;align-items:center;gap:16px}
+.bmark{
+  width:50px;height:50px;
+  background:linear-gradient(145deg,var(--amber),#b86800);
+  border-radius:13px;
+  display:flex;align-items:center;justify-content:center;font-size:23px;
+  box-shadow:0 0 40px rgba(232,160,32,0.28),inset 0 1px 0 rgba(255,255,255,0.18);
+  position:relative;
+}
+.bmark::after{content:'';position:absolute;inset:1px;border-radius:12px;border:1px solid rgba(255,255,255,0.13);pointer-events:none}
+.btxt h1{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:700;letter-spacing:-.3px;line-height:1}
+.btxt p{font-size:10px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:var(--cream3);margin-top:3px}
+.uarea{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ulabel{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--cream3)}
+.ssel{position:relative}
+.ssel::after{content:'';position:absolute;right:12px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid var(--cream3);pointer-events:none}
+select#AU{
+  background:var(--ink3);border:1px solid var(--line2);color:var(--cream);
+  font-family:'Outfit',sans-serif;font-size:13px;font-weight:500;
+  padding:10px 34px 10px 14px;border-radius:var(--r);cursor:pointer;outline:none;appearance:none;
+  transition:border-color .2s;
+}
+select#AU:focus{border-color:var(--amber)}
+select#AU option{background:var(--ink3)}
+.bghost{
+  background:transparent;border:1px solid var(--line2);color:var(--cream3);
+  font-family:'Outfit',sans-serif;font-size:12px;font-weight:500;
+  padding:10px 16px;border-radius:var(--r);cursor:pointer;transition:all .2s;white-space:nowrap;
+}
+.bghost:hover{border-color:var(--amber2);color:var(--amber2)}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:52px}
+.scard{
+  background:var(--ink2);border:1px solid var(--line);border-radius:var(--r2);
+  padding:20px 22px;position:relative;overflow:hidden;transition:border-color .25s,transform .25s;
+}
+.scard::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.022) 0%,transparent 60%);pointer-events:none}
+.scard:hover{border-color:var(--line2);transform:translateY(-2px)}
+.slabel{font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--cream3);margin-bottom:8px}
+.snum{font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:700;color:var(--cream);line-height:1}
+.snum.g{color:var(--amber2)}
+.ssub{font-size:12px;color:var(--cream3);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* LAYOUT */
+.layout{display:grid;grid-template-columns:360px 1fr;gap:36px;align-items:start}
+@media(max-width:860px){.layout{grid-template-columns:1fr}}
+
+/* FORM */
+.fcard{background:var(--ink2);border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;position:sticky;top:24px}
+.fhead{padding:22px 26px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px}
+.fhico{
+  width:36px;height:36px;background:var(--amber3);border:1px solid rgba(232,160,32,0.25);
+  border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;
+}
+.fhead h2{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--cream)}
+.fbody{padding:24px 26px}
+.fg{margin-bottom:20px}
+.fg label{display:block;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--cream3);margin-bottom:9px}
+.fg input[type=text],.fg textarea{
+  width:100%;background:var(--ink3);border:1px solid var(--line2);color:var(--cream);
+  font-family:'Outfit',sans-serif;font-size:14px;padding:11px 14px;border-radius:var(--r);outline:none;
+  transition:border-color .2s,background .2s;
+}
+.fg input:focus,.fg textarea:focus{border-color:var(--amber);background:var(--ink4)}
+.fg input::placeholder,.fg textarea::placeholder{color:var(--ink5)}
+.fg textarea{resize:vertical;min-height:72px}
+
+/* STARS */
+.srow{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.stars{display:flex;gap:3px}
+.s{background:none;border:none;cursor:pointer;font-size:21px;color:var(--ink5);line-height:1;padding:2px;transition:color .1s,transform .15s}
+.s:hover,.s.on{color:var(--amber2);transform:scale(1.18)}
+.spill{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--amber2);min-width:56px}
+
+/* CHIPS */
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{
+  background:var(--ink3);border:1px solid var(--line2);color:var(--cream3);
+  font-family:'Outfit',sans-serif;font-size:12px;font-weight:500;
+  padding:7px 13px;border-radius:20px;cursor:pointer;transition:all .18s;white-space:nowrap;
+}
+.chip:hover{border-color:var(--line3);color:var(--cream)}
+.chip.on{background:var(--amber3);border-color:rgba(232,160,32,.4);color:var(--amber2)}
+.cipinput{
+  margin-top:9px;background:var(--ink3);border:1px solid var(--line2);color:var(--cream);
+  font-family:'Outfit',sans-serif;font-size:13px;padding:8px 14px;border-radius:20px;
+  outline:none;width:100%;transition:border-color .2s;
+}
+.cipinput:focus{border-color:var(--amber)}
+.cipinput::placeholder{color:var(--ink5)}
+
+/* TOGGLES */
+.togrow{display:flex;gap:8px}
+.tog{
+  flex:1;background:var(--ink3);border:1px solid var(--line2);color:var(--cream3);
+  font-family:'Outfit',sans-serif;font-size:12px;font-weight:500;
+  padding:9px 8px;border-radius:var(--r);cursor:pointer;text-align:center;transition:all .18s;
+}
+.tog:hover{border-color:var(--line3);color:var(--cream)}
+.tog.on{background:var(--teal2);border-color:rgba(46,196,182,.35);color:var(--teal)}
+
+/* SUBMIT */
+.bsub{
+  width:100%;
+  background:linear-gradient(135deg,#b86800,var(--amber),#e8b040);
+  color:#1a0e00;font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;
+  padding:14px;border:none;border-radius:var(--r);cursor:pointer;letter-spacing:.4px;
+  transition:opacity .2s,transform .15s;box-shadow:0 4px 28px rgba(232,160,32,.22);margin-top:4px;
+}
+.bsub:hover{opacity:.87;transform:translateY(-1px)}
+.bsub:active{transform:translateY(0)}
+
+/* TABS */
+.tabs{
+  display:flex;gap:0;background:var(--ink2);border:1px solid var(--line);
+  border-radius:var(--r2);padding:5px;margin-bottom:20px;overflow-x:auto;
+}
+.tab{
+  flex:1;min-width:80px;background:none;border:none;color:var(--cream3);
+  font-family:'Outfit',sans-serif;font-size:12px;font-weight:500;
+  padding:9px 10px;border-radius:10px;cursor:pointer;transition:all .2s;white-space:nowrap;letter-spacing:.3px;
+}
+.tab.on{background:var(--ink4);color:var(--cream);box-shadow:0 1px 4px rgba(0,0,0,.4)}
+
+/* CONTROLS */
+.ctrls{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap}
+.sw{flex:1;position:relative;min-width:160px}
+.sw::before{content:'⌕';position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--cream3);font-size:17px;pointer-events:none;line-height:1}
+.sw input{
+  width:100%;background:var(--ink2);border:1px solid var(--line2);color:var(--cream);
+  font-family:'Outfit',sans-serif;font-size:13px;padding:10px 12px 10px 36px;
+  border-radius:var(--r);outline:none;transition:border-color .2s;
+}
+.sw input:focus{border-color:var(--amber)}
+.sw input::placeholder{color:var(--ink5)}
+.ssel2{
+  background:var(--ink2);border:1px solid var(--line2);color:var(--cream3);
+  font-family:'Outfit',sans-serif;font-size:12px;padding:10px 12px;border-radius:var(--r);outline:none;cursor:pointer;
+}
+
+/* CARDS */
+.list{display:flex;flex-direction:column;gap:10px}
+.card{
+  background:var(--ink2);border:1px solid var(--line);border-radius:var(--r2);
+  padding:20px 22px;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start;
+  transition:border-color .22s,transform .22s,box-shadow .22s;
+  animation:pop .3s ease forwards;position:relative;overflow:hidden;
+}
+.card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.016) 0%,transparent 55%);pointer-events:none}
+@keyframes pop{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.card:hover{border-color:var(--line2);transform:translateY(-2px);box-shadow:0 8px 40px rgba(0,0,0,.3)}
+.card.nw{border-left:2px solid var(--teal)}
+.card:hover .sbox{box-shadow:0 0 18px currentColor}
+.mname{
+  font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:600;
+  color:var(--cream);line-height:1.2;margin-bottom:6px;letter-spacing:-.1px;
+}
+.meta{display:flex;align-items:center;flex-wrap:wrap;gap:7px;margin-bottom:4px}
+.pill{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:500;letter-spacing:.2px}
+.pp{background:rgba(192,111,255,.1);color:#c06fff;border:1px solid rgba(192,111,255,.2)}
+.pn{background:var(--teal2);color:var(--teal);border:1px solid rgba(46,196,182,.2)}
+.pu{border:1px solid var(--line2)}
+.cdate{font-size:11px;color:var(--cream3)}
+.cnote{
+  font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--cream3);
+  line-height:1.55;margin-top:10px;padding-top:10px;border-top:1px solid var(--line);
+}
+.sbox{
+  width:56px;height:56px;border-radius:12px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  flex-shrink:0;transition:box-shadow .25s;
+}
+.sbox .n{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;line-height:1}
+.sbox .d{font-size:10px;opacity:.6;margin-top:1px}
+.sh{background:rgba(74,222,128,.1);color:#4ade80;border:1px solid rgba(74,222,128,.2)}
+.sm{background:var(--amber3);color:var(--amber2);border:1px solid rgba(232,160,32,.25)}
+.sl{background:rgba(212,79,110,.1);color:var(--rose);border:1px solid rgba(212,79,110,.2)}
+.cr{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.del{
+  background:none;border:1px solid transparent;color:var(--ink5);
+  font-family:'Outfit',sans-serif;font-size:13px;padding:4px 9px;border-radius:6px;cursor:pointer;transition:all .15s;
+}
+.del:hover{border-color:var(--rose);color:var(--rose)}
+
+/* EMPTY */
+.empty{text-align:center;padding:80px 20px;color:var(--cream3)}
+.eico{font-size:52px;margin-bottom:16px;opacity:.3}
+.empty h3{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--cream3);margin-bottom:8px}
+.empty p{font-size:13px;color:var(--ink5)}
+
+/* ALL USERS */
+.ublock{margin-bottom:32px}
+.ubhead{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-weight:700;font-size:14px;flex-shrink:0}
+.ubhead h3{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600}
+.ubhead .uavg{font-size:12px;color:var(--cream3);margin-left:4px}
+.ubhead .ucnt{margin-left:auto;font-size:11px;color:var(--cream3)}
+
+/* TOAST */
+.toast{
+  position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(90px);
+  background:var(--ink3);border:1px solid var(--line2);color:var(--cream);
+  font-family:'Outfit',sans-serif;font-size:13px;padding:12px 24px;border-radius:100px;
+  z-index:9998;box-shadow:0 8px 32px rgba(0,0,0,.5);
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;
+}
+.toast.on{transform:translateX(-50%) translateY(0)}
+
+/* MODAL */
+.ovl{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);z-index:100;align-items:center;justify-content:center}
+.ovl.on{display:flex}
+.modal{background:var(--ink2);border:1px solid var(--line2);border-radius:var(--r2);padding:32px;width:360px;max-width:92vw}
+.modal h3{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;margin-bottom:18px}
+.modal input{
+  width:100%;background:var(--ink3);border:1px solid var(--line2);color:var(--cream);
+  font-family:'Outfit',sans-serif;font-size:14px;padding:11px 14px;border-radius:var(--r);
+  outline:none;margin-bottom:16px;transition:border-color .2s;
+}
+.modal input:focus{border-color:var(--amber)}
+.modal input::placeholder{color:var(--ink5)}
+.mbtns{display:flex;gap:10px}
+.mbtns button{flex:1;font-family:'Outfit',sans-serif;font-size:13px;font-weight:500;padding:11px;border-radius:var(--r);cursor:pointer;transition:all .15s}
+.bok{background:linear-gradient(135deg,#b86800,var(--amber));border:none;color:#1a0e00;font-weight:600}
+.bok:hover{opacity:.9}
+.bcx{background:transparent;border:1px solid var(--line2);color:var(--cream3)}
+.bcx:hover{border-color:var(--line3);color:var(--cream)}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--ink)}
+::-webkit-scrollbar-thumb{background:var(--ink4);border-radius:3px}
+</style>
+</head>
+<body>
+<div class="orb o1"></div>
+<div class="orb o2"></div>
+<div class="orb o3"></div>
+<div class="wrap">
+
+  <header>
+    <div class="hrow">
+      <div class="brand">
+        <div class="bmark">🎬</div>
+        <div class="btxt">
+          <h1>CineMate</h1>
+          <p>Your personal film journal</p>
+        </div>
+      </div>
+      <div class="uarea">
+        <span class="ulabel">Viewing as</span>
+        <div class="ssel"><select id="AU" onchange="switchUser()"></select></div>
+        <button class="bghost" onclick="openModal()">+ New Profile</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="stats" id="statsEl"></div>
+
+  <div class="layout">
+    <div class="fcard">
+      <div class="fhead">
+        <div class="fhico">✦</div>
+        <h2>Log a Film</h2>
+      </div>
+      <div class="fbody">
+        <div class="fg">
+          <label>Film Title</label>
+          <input type="text" id="titleEl" placeholder="e.g. The Brutalist" autocomplete="off">
+        </div>
+        <div class="fg">
+          <label>Your Rating</label>
+          <div class="srow">
+            <div class="stars" id="starsEl"></div>
+            <span class="spill" id="pillEl">—</span>
+          </div>
+        </div>
+        <div class="fg">
+          <label>Where Did You Watch?</label>
+          <div class="chips" id="chipsEl">
+            <button class="chip" onclick="pickP(this,'Netflix')">Netflix</button>
+            <button class="chip" onclick="pickP(this,'Disney+')">Disney+</button>
+            <button class="chip" onclick="pickP(this,'Prime Video')">Prime</button>
+            <button class="chip" onclick="pickP(this,'Apple TV+')">Apple TV+</button>
+            <button class="chip" onclick="pickP(this,'Cinema')">🎟 Cinema</button>
+            <button class="chip" onclick="pickP(this,'HBO Max')">HBO Max</button>
+            <button class="chip" onclick="pickP(this,'Mubi')">Mubi</button>
+          </div>
+          <input class="cipinput" id="otherEl" type="text" placeholder="Other platform…" oninput="otherInput(this)">
+        </div>
+        <div class="fg">
+          <label>New Release?</label>
+          <div class="togrow">
+            <button class="tog" id="tY" onclick="setNew(true)">✦ Just Released</button>
+            <button class="tog" id="tN" onclick="setNew(false)">Older Film</button>
+          </div>
+        </div>
+        <div class="fg">
+          <label>Notes</label>
+          <textarea id="noteEl" placeholder="What stood out? Any favourite scenes?"></textarea>
+        </div>
+        <button class="bsub" onclick="submit()">Add to Journal ✦</button>
+      </div>
+    </div>
+
+    <div>
+      <div class="tabs">
+        <button class="tab on" id="tab-mine" onclick="goTab('mine')">My Ratings</button>
+        <button class="tab" id="tab-all" onclick="goTab('all')">All Users</button>
+        <button class="tab" id="tab-new" onclick="goTab('new')">New Releases</button>
+        <button class="tab" id="tab-top" onclick="goTab('top')">Top Rated</button>
+      </div>
+      <div class="ctrls" id="ctrlsEl">
+        <div class="sw">
+          <input type="text" id="searchEl" placeholder="Search films…" oninput="renderList()">
+        </div>
+        <select class="ssel2" id="sortEl" onchange="renderList()">
+          <option value="newest">Newest first</option>
+          <option value="oldest">Oldest first</option>
+          <option value="highest">Highest rated</option>
+          <option value="lowest">Lowest rated</option>
+          <option value="az">A – Z</option>
+        </select>
+      </div>
+      <div class="list" id="listEl"></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toastEl"></div>
+
+<div class="ovl" id="ovlEl">
+  <div class="modal">
+    <h3>Add New Profile</h3>
+    <input type="text" id="nameEl" placeholder="Your name…" maxlength="28" onkeydown="if(event.key==='Enter')confirmUser()">
+    <div class="mbtns">
+      <button class="bcx" onclick="closeModal()">Cancel</button>
+      <button class="bok" onclick="confirmUser()">Create Profile</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const KEY = 'cm_v3';
+const PAL = [
+  ['rgba(192,111,255,.18)', '#c06fff'],
+  ['rgba(232,160,32,.15)', '#f5c842'],
+  ['rgba(46,196,182,.15)', '#2ec4b6'],
+  ['rgba(212,79,110,.14)', '#e4618a'],
+  ['rgba(74,222,128,.12)', '#4ade80'],
+];
+
+let D = { 
+  users: [], 
+  active: '', 
+  ratings: [], 
+  tab: 'mine', 
+  score: 0, 
+  plat: '', 
+  isNew: null 
+};
+
+function load() {
+  try {
+    const s = JSON.parse(localStorage.getItem(KEY) || '{}');
+    if (s.users && s.users.length > 0) {
+      Object.assign(D, s);
+    }
+  } catch (e) {
+    console.error("Load failed", e);
+  }
+}
+
+function save() {
+  localStorage.setItem(KEY, JSON.stringify({ 
+    users: D.users, 
+    active: D.active, 
+    ratings: D.ratings 
+  }));
+}
+
+function buildStars() {
+  const el = document.getElementById('starsEl'); el.innerHTML = '';
+  for (let i = 1; i <= 10; i++) {
+    const b = document.createElement('button');
+    b.className = 's' + (i <= D.score ? ' on' : ''); b.textContent = '★'; b.dataset.v = i;
+    b.onclick = () => setScore(i);
+    b.onmouseenter = () => prev(i);
+    b.onmouseleave = () => prev(D.score);
+    el.appendChild(b);
+  }
+  document.getElementById('pillEl').textContent = D.score ? D.score + '/10' : '—';
+}
+
+function prev(n) {
+  document.querySelectorAll('.s').forEach((b, i) => b.classList.toggle('on', i < n));
+  document.getElementById('pillEl').textContent = n ? n + '/10' : '—';
+}
+
+function setScore(n) {
+  D.score = n; buildStars();
+}
+
+function pickP(btn, name) {
+  document.querySelectorAll('.chip').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  D.plat = name;
+  document.getElementById('otherEl').value = '';
+}
+
+function otherInput(el) {
+  document.querySelectorAll('.chip').forEach(b => b.classList.remove('on'));
+  D.plat = el.value;
+}
+
+function setNew(v) {
+  D.isNew = v;
+  document.getElementById('tY').classList.toggle('on', v === true);
+  document.getElementById('tN').classList.toggle('on', v === false);
+}
+
+function submit() {
+  if (!D.active) { toast('Please create a profile first'); openModal(); return; }
+  const t = document.getElementById('titleEl').value.trim();
+  if (!t) { toast('Enter a film title'); return; }
+  if (!D.score) { toast('Give it a rating'); return; }
+  if (!D.plat) { toast('Where did you watch it?'); return; }
+  
+  const r = {
+    id: Date.now(),
+    user: D.active,
+    title: t,
+    score: D.score,
+    plat: D.plat,
+    isNew: D.isNew === true,
+    note: document.getElementById('noteEl').value.trim(),
+    date: new Date().toISOString()
+  };
+  
+  D.ratings.unshift(r);
+  save();
+  resetForm();
+  renderAll();
+  toast('✦ ' + t + ' added to your journal');
+  D.tab = 'mine';
+  goTab('mine', false);
+}
+
+function resetForm() {
+  document.getElementById('titleEl').value = '';
+  document.getElementById('noteEl').value = '';
+  document.getElementById('otherEl').value = '';
+  document.querySelectorAll('.chip').forEach(b => b.classList.remove('on'));
+  document.getElementById('tY').classList.remove('on');
+  document.getElementById('tN').classList.remove('on');
+  D.score = 0; D.plat = ''; D.isNew = null;
+  buildStars();
+}
+
+function delR(id) {
+  D.ratings = D.ratings.filter(r => r.id !== id);
+  save();
+  renderAll();
+  toast('Removed from journal');
+}
+
+function goTab(t, r = true) {
+  D.tab = t;
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('on'));
+  document.getElementById('tab-' + t).classList.add('on');
+  document.getElementById('ctrlsEl').style.display = (t === 'all' ? 'none' : 'flex');
+  if (r) renderList();
+}
+
+function switchUser() {
+  D.active = document.getElementById('AU').value;
+  save();
+  renderAll();
+  toast('Switched to ' + D.active + '’s profile');
+}
+
+function buildSel() {
+  const s = document.getElementById('AU');
+  s.innerHTML = D.users.map(u => `<option value="${u}"${u === D.active ? ' selected' : ''}>${u}</option>`).join('');
+}
+
+function openModal() {
+  document.getElementById('ovlEl').classList.add('on');
+  document.getElementById('nameEl').value = '';
+  setTimeout(() => document.getElementById('nameEl').focus(), 80);
+}
+
+function closeModal() {
+  if (D.users.length === 0) {
+    toast('You need at least one profile to start!');
+    return;
+  }
+  document.getElementById('ovlEl').classList.remove('on');
+}
+
+function confirmUser() {
+  const n = document.getElementById('nameEl').value.trim();
+  if (!n) return;
+  if (D.users.includes(n)) { toast('Profile already exists'); return; }
+  
+  D.users.push(n);
+  D.active = n;
+  save();
+  document.getElementById('ovlEl').classList.remove('on');
+  buildSel();
+  renderAll();
+  toast('Welcome, ' + n + '! Start logging films ✦');
+}
+
+function sc(s) { return s >= 8 ? 'sh' : s >= 5 ? 'sm' : 'sl'; }
+function pal(u) { const i = D.users.indexOf(u) % PAL.length; return PAL[i < 0 ? 0 : i]; }
+function ini(u) { return u.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase(); }
+function fmt(iso) { return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }); }
+
+function cardH(r, showU = false) {
+  const [bg, c] = pal(r.user);
+  const mine = r.user === D.active;
+  return `<div class="card${r.isNew ? ' nw' : ''}">
+    <div>
+      <div class="mname">${r.title}</div>
+      <div class="meta">
+        ${showU ? `<span class="pill pu" style="background:${bg};color:${c};border-color:${c}33;">${ini(r.user)} ${r.user}</span>` : ''}
+        <span class="pill pp">▶ ${r.plat}</span>
+        ${r.isNew ? `<span class="pill pn">✦ New Release</span>` : ''}
+        <span class="cdate">${fmt(r.date)}</span>
+      </div>
+      ${r.note ? `<div class="cnote">&ldquo;${r.note}&rdquo;</div>` : ''}
+    </div>
+    <div class="cr">
+      <div class="sbox ${sc(r.score)}"><span class="n">${r.score}</span><span class="d">/10</span></div>
+      ${mine ? `<button class="del" onclick="delR(${r.id})">✕</button>` : ''}
+    </div>
+  </div>`;
+}
+
+function renderList() {
+  const el = document.getElementById('listEl');
+  const t = D.tab;
+  const q = (document.getElementById('searchEl').value || '').toLowerCase();
+  const sort = document.getElementById('sortEl').value;
+  
+  if (t === 'all') { renderAllUsersList(); return; }
+  
+  let items;
+  if (t === 'mine') items = D.ratings.filter(r => r.user === D.active);
+  else if (t === 'new') items = D.ratings.filter(r => r.isNew);
+  else if (t === 'top') {
+    const seen = new Set();
+    items = [...D.ratings].sort((a, b) => b.score - a.score).filter(r => {
+      const k = r.title.toLowerCase();
+      if (seen.has(k)) return false;
+      seen.add(k); return true;
+    });
+  } else items = [...D.ratings];
+
+  if (q) items = items.filter(r => r.title.toLowerCase().includes(q) || r.user.toLowerCase().includes(q));
+
+  const s = [...items];
+  if (sort === 'newest') s.sort((a, b) => b.id - a.id);
+  else if (sort === 'oldest') s.sort((a, b) => a.id - b.id);
+  else if (sort === 'highest') s.sort((a, b) => b.score - a.score);
+  else if (sort === 'lowest') s.sort((a, b) => a.score - b.score);
+  else if (sort === 'az') s.sort((a, b) => a.title.localeCompare(b.title));
+
+  if (!s.length) {
+    el.innerHTML = `<div class="empty"><div class="eico">🎞</div><h3>No films here yet</h3><p>${t === 'mine' ? 'Log your first film using the form' : 'Nothing matches your search'}</p></div>`;
+    return;
+  }
+  el.innerHTML = s.map(r => cardH(r, t !== 'mine')).join('');
+}
+
+function renderAllUsersList() {
+  const el = document.getElementById('listEl');
+  if (D.users.length === 0) {
+    el.innerHTML = `<div class="empty"><div class="eico">👤</div><h3>No profiles yet</h3><p>Create a profile to see community stats</p></div>`;
+    return;
+  }
+  
+  let h = '';
+  for (const u of D.users) {
+    const ur = D.ratings.filter(r => r.user === u);
+    const [bg, c] = pal(u);
+    const avg = ur.length ? (ur.reduce((s, r) => s + r.score, 0) / ur.length).toFixed(1) : '—';
+    h += `<div class="ublock">
+      <div class="ubhead">
+        <div class="av" style="background:${bg};color:${c};">${ini(u)}</div>
+        <h3>${u}<span class="uavg"> avg ${avg}</span></h3>
+        <span class="ucnt">${ur.length} film${ur.length !== 1 ? 's' : ''}</span>
+      </div>
+      ${ur.length ? ur.slice(0, 5).map(r => cardH(r, false)).join('') : '<p style="color:var(--ink5);font-size:13px;padding:8px 0;">No films rated yet</p>'}
+      ${ur.length > 5 ? `<p style="font-size:12px;color:var(--cream3);padding:6px 0;">+${ur.length - 5} more films</p>` : ''}
+    </div>`;
+  }
+  el.innerHTML = h;
+}
+
+function renderStats() {
+  const el = document.getElementById('statsEl');
+  const mine = D.ratings.filter(r => r.user === D.active);
+  const avg = mine.length ? (mine.reduce((s, r) => s + r.score, 0) / mine.length).toFixed(1) : '—';
+  const best = mine.length ? mine.reduce((a, b) => b.score > a.score ? b : a) : null;
+  const newC = mine.filter(r => r.isNew).length;
+  
+  el.innerHTML = `
+    <div class="scard"><div class="slabel">My Films</div><div class="snum">${mine.length}</div></div>
+    <div class="scard"><div class="slabel">Avg Score</div><div class="snum g">${avg}</div></div>
+    <div class="scard"><div class="slabel">New Releases</div><div class="snum">${newC}</div></div>
+    <div class="scard"><div class="slabel">Top Pick</div><div class="snum" style="font-size:15px;font-family:'Outfit';font-weight:600;line-height:1.4;margin-top:4px;">${best ? best.title.slice(0, 24) + (best.title.length > 24 ? '…' : '') : '—'}</div></div>
+    <div class="scard"><div class="slabel">Community</div><div class="snum">${D.ratings.length}</div></div>
+    <div class="scard"><div class="slabel">Profiles</div><div class="snum">${D.users.length}</div></div>
+  `;
+}
+
+function renderAll() {
+  buildSel();
+  renderStats();
+  renderList();
+}
+
+function toast(msg) {
+  const e = document.getElementById('toastEl');
+  e.textContent = msg; e.classList.add('on');
+  clearTimeout(e._t); e._t = setTimeout(() => e.classList.remove('on'), 2800);
+}
+
+// APP ENTRY POINT
+(function initApp() {
+  load();
+  
+  // If fresh start with no users
+  if (D.users.length === 0) {
+    setTimeout(() => {
+      openModal();
+      const modalTitle = document.querySelector('#ovlEl h3');
+      if (modalTitle) modalTitle.textContent = "Welcome to CineMate! Create your profile";
+    }, 500);
+  }
+
+  buildStars();
+  renderAll();
+})();
+</script>
+</body>
+</html>
