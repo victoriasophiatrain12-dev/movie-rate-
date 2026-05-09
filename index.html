@@ -16,13 +16,13 @@
   // Your web app's Firebase configuration
   // For Firebase JS SDK v7.20.0 and later, measurementId is optional
   const firebaseConfig = {
-    apiKey: "AIzaSyBTmRiL4f-KyUHyahMKq31ynUiNNtLBgtk",
-    authDomain: "moverate-c7573.firebaseapp.com",
-    projectId: "moverate-c7573",
-    storageBucket: "moverate-c7573.firebasestorage.app",
-    messagingSenderId: "574652141078",
-    appId: "1:574652141078:web:5f843c85ba8896d5c66f37",
-    measurementId: "G-Y1L9HNEJGC"
+    apiKey: "AIzaSyBD53MRisDSNXnrbVCdDAY8lZrmJBrDLhI",
+    authDomain: "movie-rate-7bf39.firebaseapp.com",
+    projectId: "movie-rate-7bf39",
+    storageBucket: "movie-rate-7bf39.firebasestorage.app",
+    messagingSenderId: "622735708874",
+    appId: "1:622735708874:web:cdc4d2f4de399543a35a33",
+    measurementId: "G-T5TWB1E4VL"
   };
 
   // Initialize Firebase
@@ -127,7 +127,24 @@ select#AU option{background:var(--ink3)}
 @media(max-width:860px){.layout{grid-template-columns:1fr}}
 
 /* FORM */
-.fcard{background:var(--ink2);border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;position:sticky;top:24px}
+.fcard{background:var(--ink2);border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;position:sticky;top:24px;z-index:2}
+.fg-rel{position:relative}
+.omdb-drop{
+  position:absolute;top:100%;left:0;right:0;margin-top:4px;
+  background:var(--ink3);border:1px solid var(--line2);border-radius:var(--r);
+  box-shadow:0 10px 30px rgba(0,0,0,.5);z-index:10;max-height:240px;overflow-y:auto;
+  display:none;
+}
+.omdb-drop.on{display:block}
+.omdb-item{
+  display:flex;align-items:center;gap:10px;padding:10px;border-bottom:1px solid var(--line);
+  cursor:pointer;transition:background .2s;
+}
+.omdb-item:last-child{border-bottom:none}
+.omdb-item:hover{background:var(--ink4)}
+.omdb-p{width:32px;height:48px;border-radius:4px;object-fit:cover;background:var(--ink)}
+.omdb-t{font-family:'Outfit',sans-serif;font-size:13px;color:var(--cream);font-weight:500;line-height:1.2}
+.omdb-y{font-size:11px;color:var(--cream3);margin-top:2px}
 .fhead{padding:22px 26px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px}
 .fhico{
   width:36px;height:36px;background:var(--amber3);border:1px solid rgba(232,160,32,0.25);
@@ -223,10 +240,12 @@ select#AU option{background:var(--ink3)}
 .list{display:flex;flex-direction:column;gap:10px}
 .card{
   background:var(--ink2);border:1px solid var(--line);border-radius:var(--r2);
-  padding:20px 22px;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start;
+  padding:20px 22px;display:flex;gap:16px;align-items:start;
   transition:border-color .22s,transform .22s,box-shadow .22s;
   animation:pop .3s ease forwards;position:relative;overflow:hidden;
 }
+.card > .cmain{flex:1;min-width:0}
+.cpost{width:60px;height:90px;border-radius:6px;object-fit:cover;background:var(--ink3);flex-shrink:0;border:1px solid var(--line)}
 .card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.016) 0%,transparent 55%);pointer-events:none}
 @keyframes pop{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .card:hover{border-color:var(--line2);transform:translateY(-2px);box-shadow:0 8px 40px rgba(0,0,0,.3)}
@@ -344,7 +363,10 @@ select#AU option{background:var(--ink3)}
       <div class="fbody">
         <div class="fg">
           <label>Film Title</label>
-          <input type="text" id="titleEl" placeholder="e.g. The Brutalist" autocomplete="off">
+          <div class="fg-rel">
+            <input type="text" id="titleEl" placeholder="e.g. The Brutalist" autocomplete="off" oninput="searchOMDB()">
+            <div id="omdbDrop" class="omdb-drop"></div>
+          </div>
         </div>
         <div class="fg">
           <label>Your Rating</label>
@@ -429,6 +451,8 @@ const PAL = [
   ['rgba(74,222,128,.12)', '#4ade80'],
 ];
 
+const OMDB_API_KEY = "YOUR_API_KEY"; // Replace with your OMDb API key
+
 let D = { 
   users: [], 
   active: '', 
@@ -438,6 +462,9 @@ let D = {
   plat: '', 
   isNew: null 
 };
+
+let omdbSelected = null;
+let omdbTimer = null;
 
 function load() {
   try {
@@ -513,7 +540,8 @@ function submit() {
     plat: D.plat,
     isNew: D.isNew === true,
     note: document.getElementById('noteEl').value.trim(),
-    date: new Date().toISOString()
+    date: new Date().toISOString(),
+    omdb: omdbSelected || null
   };
   
   D.ratings.unshift(r);
@@ -532,8 +560,49 @@ function resetForm() {
   document.querySelectorAll('.chip').forEach(b => b.classList.remove('on'));
   document.getElementById('tY').classList.remove('on');
   document.getElementById('tN').classList.remove('on');
-  D.score = 0; D.plat = ''; D.isNew = null;
+  document.getElementById('omdbDrop').classList.remove('on');
+  D.score = 0; D.plat = ''; D.isNew = null; omdbSelected = null;
   buildStars();
+}
+
+async function searchOMDB() {
+  const q = document.getElementById('titleEl').value.trim();
+  const drop = document.getElementById('omdbDrop');
+  omdbSelected = null; // reset selection when typing
+  if (q.length < 3) { drop.classList.remove('on'); return; }
+  
+  clearTimeout(omdbTimer);
+  omdbTimer = setTimeout(async () => {
+    try {
+      if(OMDB_API_KEY === "YOUR_API_KEY") {
+        drop.innerHTML = '<div style="padding:10px;font-size:12px;color:var(--amber2)">Add your OMDb API key in the code to search films</div>';
+        drop.classList.add('on');
+        return;
+      }
+      const res = await fetch(`https://www.omdbapi.com/?s=${encodeURIComponent(q)}&type=movie&apikey=${OMDB_API_KEY}`);
+      const data = await res.json();
+      if (data.Search) {
+        drop.innerHTML = data.Search.slice(0, 5).map(m => `
+          <div class="omdb-item" onclick="selectOMDB('${m.imdbID}', '${m.Title.replace(/'/g,"\\'").replace(/"/g,"&quot;")}', '${m.Year}', '${m.Poster}')">
+            ${m.Poster !== 'N/A' ? `<img src="${m.Poster}" class="omdb-p">` : `<div class="omdb-p"></div>`}
+            <div>
+              <div class="omdb-t">${m.Title}</div>
+              <div class="omdb-y">${m.Year}</div>
+            </div>
+          </div>
+        `).join('');
+        drop.classList.add('on');
+      } else {
+        drop.classList.remove('on');
+      }
+    } catch(e) { console.error("OMDb search failed", e); }
+  }, 400);
+}
+
+function selectOMDB(id, title, year, poster) {
+  document.getElementById('titleEl').value = title;
+  document.getElementById('omdbDrop').classList.remove('on');
+  omdbSelected = { id, year, poster: poster !== 'N/A' ? poster : null };
 }
 
 function delR(id) {
@@ -599,13 +668,17 @@ function fmt(iso) { return new Date(iso).toLocaleDateString('en-GB', { day: 'num
 function cardH(r, showU = false) {
   const [bg, c] = pal(r.user);
   const mine = r.user === D.active;
+  const posterHtml = r.omdb && r.omdb.poster ? `<img src="${r.omdb.poster}" class="cpost" loading="lazy">` : '';
+  const yearHtml = r.omdb && r.omdb.year ? `<span class="pill pu">${r.omdb.year}</span>` : '';
   return `<div class="card${r.isNew ? ' nw' : ''}">
-    <div>
+    ${posterHtml}
+    <div class="cmain">
       <div class="mname">${r.title}</div>
       <div class="meta">
         ${showU ? `<span class="pill pu" style="background:${bg};color:${c};border-color:${c}33;">${ini(r.user)} ${r.user}</span>` : ''}
         <span class="pill pp">▶ ${r.plat}</span>
         ${r.isNew ? `<span class="pill pn">✦ New Release</span>` : ''}
+        ${yearHtml}
         <span class="cdate">${fmt(r.date)}</span>
       </div>
       ${r.note ? `<div class="cnote">&ldquo;${r.note}&rdquo;</div>` : ''}
